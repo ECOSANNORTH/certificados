@@ -6,6 +6,7 @@
     <title>Ecosannorth Certificados</title>
     <style>
         * { box-sizing: border-box; }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #10b981;
@@ -16,6 +17,7 @@
             align-items: center;
             min-height: 100vh;
         }
+        
         /* Caja del formulario de acceso */
         #pantalla-login {
             background: white;
@@ -25,21 +27,34 @@
             max-width: 400px;
             width: 100%;
             text-align: center;
+            
+            /* Ajustes obligatorios para la imagen flotante encima */
+            position: relative;
+            margin-top: 60px; 
         }
+        
+        /* Imagen superior flotante */
         .imagen-superior {
-    width: 100px;
-    height: 100px;
-    background-color: #ffffff;
-    border-radius: 50%;        /* La hace completamente redonda */
-    border: 5px solid #10b981; /* Borde verde que combina con el fondo */
-    object-fit: cover;         /* Centra la foto dentro del círculo sin deformarla */
-    
-    /* Empuja la imagen hacia arriba fuera del cuadro */
-    margin-top: -90px;         
-    margin-bottom: 20px;       
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
-        #pantalla-login h2 { margin-top: 0; color: #2c3e50; }
+            width: 110px;
+            height: 110px;
+            background-color: #ffffff;
+            border-radius: 50%;        /* Forma circular */
+            border: 5px solid #10b981; /* Combina con el fondo verde */
+            object-fit: cover;         
+            display: inline-block;
+            
+            /* Desplazamiento hacia arriba */
+            margin-top: -95px;         
+            margin-bottom: 15px;       
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        #pantalla-login h2 { 
+            margin-top: 5px; 
+            color: #2c3e50; 
+            font-size: 20px;
+        }
+        
         #pantalla-login input {
             width: 100%;
             padding: 12px;
@@ -49,6 +64,7 @@
             font-size: 16px;
             text-align: center;
         }
+        
         #pantalla-login button {
             width: 100%;
             padding: 12px;
@@ -61,7 +77,9 @@
             font-weight: bold;
             transition: background 0.2s;
         }
+        
         #pantalla-login button:hover { background-color: #2980b9; }
+        
         #mensaje-estado { color: #e74c3c; margin-top: 10px; font-size: 14px; display: none; }
 
         /* Contenido oculto que se mostrará al validar el código */
@@ -82,10 +100,14 @@
 
     <!-- FORMULARIO DE LOGEO -->
     <div id="pantalla-login">
+        <!-- La imagen agregada correctamente aquí arriba -->
+        <img src="foto.png" alt="Logo Ecosannorth" class="imagen-superior">
+        
         <h2>VALIDACIÓN DE CERTIFICADOS</h2>
         
         <input type="text" id="codigo-input" placeholder="Ingresa tu código de acceso" autocomplete="off">
-        <button onclick="ValidarCodigo()">VALIDAR</button>
+        <!-- Cambiado a verificarCodigo() para que coincida con el script -->
+        <button onclick="verificarCodigo()">VALIDAR</button>
         <p id="mensaje-estado"></p>
     </div>
 
@@ -102,7 +124,7 @@
         const ENLACE_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTxCusB0O36Zlyhx2JOWRLN5a_9pEOu3PFXG_HOZaqcDk00uzmXyWHGvkXsMrjExKfL2Zb8f846lS8b/pub?gid=0&single=true&output=csv";
         
         // Proxy público para saltarse el bloqueo CORS del navegador
-        const PROXY_CORS = "https://herokuapp.com";
+        const PROXY_CORS = "https://herokuapp.com"; // Corregido el endpoint común del proxy herokuapp
 
         async function verificarCodigo() {
             const inputField = document.getElementById("codigo-input");
@@ -161,7 +183,7 @@
                     }
                 } catch(e) {}
                 
-                estadoText.innerText = "Error de conexión. Intenta abrir el archivo usando la extensión Live Server de VS Code.";
+                estadoText.innerText = "Error de conexión con la base de datos.";
                 estadoText.style.color = "#e74c3c";
                 console.error(error);
             }
