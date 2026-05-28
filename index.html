@@ -21,35 +21,37 @@
         /* Caja del formulario de acceso */
         #pantalla-login {
             background: white;
-            padding: 40px 30px;
+            padding: 0 30px 40px 30px;
             border-radius: 12px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.1);
             max-width: 400px;
             width: 100%;
             text-align: center;
-            
-            /* Ajustes obligatorios para la imagen flotante encima */
+            overflow: hidden;
             position: relative;
-            margin-top: 60px; 
+            margin-top: 20px; 
         }
-        
-        /* Imagen superior flotante */
+        /* Imagen del mismo ancho que el cuadro */
         .imagen-superior {
-            width: 180px;
-            height: 100px;
-            width: auto;
-            heigh: auto;
-            background-color: #ffffff;
-            border-radius: 8px;        /* Forma circular */
-            border: 5px solid #10b981; /* Combina con el fondo verde */
-            object-fit: cover;         
-            display: inline-block;
+            width: calc(100% + 60px); /* Expande la foto para cubrir los márgenes internos (padding) del cuadro */
+            margin-left: -30px;       /* Mueve la foto a la izquierda para alinearla al borde exacto */
+            height: auto;             /* Mantiene la proporción de tu imagen */
+            max-height: 200px;        /* Evita que una foto muy alta desarme el diseño */
+            object-fit: cover;        /* Cubre todo el espacio asignado sin deformarse */
             
-            /* Desplazamiento hacia arriba */
-            margin-top: -95px;         
-            margin-bottom: 15px;       
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            /* Redondea solo las esquinas de arriba para encajar con el contenedor */
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            border-bottom: 3px solid #10b981; /* Línea verde divisoria antes del contenido */
+            
+            /* Eliminamos los márgenes flotantes negativos anteriores */
+            margin-top: 0;         
+            margin-bottom: 25px;       
+            display: block;
         }
+Use code with caution.¿Cómo se verá tu diseño ahora?La imagen ya no flotará en el aire. Ahora 
+        
+        
 
         #pantalla-login h2 { 
             margin-top: 5px; 
