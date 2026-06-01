@@ -107,7 +107,7 @@
             padding: 20px;
             text-align: left;
             margin-top: 20px;
-            margin-bottom: 25px; /* Espacio inferior para separar la imagen */
+            margin-bottom: 25px; 
         }
         .tarjeta-datos h3 {
             margin-top: 0;
@@ -125,7 +125,7 @@
             color: #1a252f;
         }
 
-        /* NUEVO: Estilos para la imagen inferior del contenido privado */
+        /* Estilos para la imagen inferior del contenido privado */
         .imagen-inferior {
             max-width: 100%;
             height: auto;
@@ -152,110 +152,6 @@
 
     <div id="contenido-privado">
         <h1>¡CERTIFICADO VÁLIDO! 🌟</h1>
-        <p>Tú certificado ha sido validado exitosamente.</p>
+        <p>Tu certificado ha sido validado exitosamente.</p>
         
         <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-        
-        <div class="tarjeta-datos">
-            <h3>👤 Información del Titular</h3>
-            <p><strong>Nombre/Razón Social:</strong> <span id="datos-nombre"></span></p>
-            <p><strong>DNI/RUC:</strong> <span id="datos-dni"></span></p>
-            <p><strong>Categoría:</strong> <span id="datos-categoria"></span></p>
-        </div>
-
-        <img src="foto.png" alt="Logo Ecosannorth Inferior" class="imagen-inferior">
-    </div>
-
-    <script>
-        const ENLACE_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTxCusB0O36Zlyhx2JOWRLN5a_9pEOu3PFXG_HOZaqcDk00uzmXyWHGvkXsMrjExKfL2Zb8f846lS8b/pub?gid=0&single=true&output=csv";
-        const PROXY_CORS = "https://herokuapp.com"; 
-
-        function buscarUsuarioEnCsv(textoCsv, intento) {
-            const filas = textoCsv.split(/\r?\n/);
-            
-            for (let i = 0; i < filas.length; i++) {
-                const columnas = filas[i].split(",");
-                
-                if (columnas.length > 0) {
-                    const codigoCsv = columnas[0].replace(/"/g, "").trim().toLowerCase();
-                    
-                    if (codigoCsv === intento) {
-                        return {
-                            codigo: columnas[0].replace(/"/g, "").trim(),
-                            dni: columnas[1] ? columnas[1].replace(/"/g, "").trim() : "No registrado",      
-                            nombre: columnas[2] ? columnas[2].replace(/"/g, "").trim() : "No registrado",   
-                            categoria: columnas[3] ? columnas[3].replace(/"/g, "").trim() : "No registrado" 
-                        };
-                    }
-                }
-            }
-            return null; 
-        }
-
-        function mostrarContenidoPrivado(usuario) {
-            document.getElementById("datos-nombre").innerText = usuario.nombre;
-            document.getElementById("datos-dni").innerText = usuario.dni;
-            document.getElementById("datos-categoria").innerText = usuario.categoria;
-
-            document.getElementById("pantalla-login").style.display = "none";
-            document.getElementById("contenido-privado").style.display = "block";
-        }
-
-        async function verificarCodigo() {
-            const inputField = document.getElementById("codigo-input");
-            const estadoText = document.getElementById("mensaje-estado");
-            let intento = inputField.value.trim().toLowerCase();
-
-            if (!intento) {
-                estadoText.innerText = "Por favor, escribe un código.";
-                estadoText.style.color = "#e74c3c";
-                estadoText.style.display = "block";
-                return;
-            }
-
-            estadoText.innerText = "Conectando con la base de datos...";
-            estadoText.style.color = "#7f8c8d";
-            estadoText.style.display = "block";
-
-            try {
-                let respuesta = await fetch(ENLACE_CSV, { cache: "no-store" });
-                if (!respuesta.ok) {
-                    respuesta = await fetch(PROXY_CORS + ENLACE_CSV);
-                }
-                const textoCsv = await respuesta.text();
-                
-                const usuarioEncontrado = buscarUsuarioEnCsv(textoCsv, intento);
-
-                if (usuarioEncontrado) {
-                    mostrarContenidoPrivado(usuarioEncontrado);
-                } else {
-                    estadoText.innerText = "Código incorrecto o no verificado.";
-                    estadoText.style.color = "#e74c3c";
-                }
-
-            } catch (error) {
-                try {
-                    const respuestaAlt = await fetch("https://allorigins.win" + encodeURIComponent(ENLACE_CSV));
-                    const jsonAlt = await respuestaAlt.json();
-                    
-                    const usuarioEncontrado = buscarUsuarioEnCsv(jsonAlt.contents, intento);
-                    if (usuarioEncontrado) {
-                        mostrarContenidoPrivado(usuarioEncontrado);
-                        return;
-                    }
-                } catch(e) {}
-                
-                estadoText.innerText = "Error de conexión con la base de datos.";
-                estadoText.style.color = "#e74c3c";
-                console.error(error);
-            }
-        }
-
-        document.getElementById("codigo-input").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                verificarCodigo();
-            }
-        });
-    </script>
-</body>
-</html>
