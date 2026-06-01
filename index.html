@@ -107,6 +107,7 @@
             padding: 20px;
             text-align: left;
             margin-top: 20px;
+            margin-bottom: 25px; /* Espacio inferior para separar la imagen */
         }
         .tarjeta-datos h3 {
             margin-top: 0;
@@ -122,6 +123,16 @@
         .tarjeta-datos span {
             font-weight: 600;
             color: #1a252f;
+        }
+
+        /* NUEVO: Estilos para la imagen inferior del contenido privado */
+        .imagen-inferior {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: inline-block;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -151,13 +162,14 @@
             <p><strong>DNI:</strong> <span id="datos-dni"></span></p>
             <p><strong>Categoría:</strong> <span id="datos-categoria"></span></p>
         </div>
+
+        <img src="foto.png" alt="Logo Ecosannorth Inferior" class="imagen-inferior">
     </div>
 
     <script>
         const ENLACE_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTxCusB0O36Zlyhx2JOWRLN5a_9pEOu3PFXG_HOZaqcDk00uzmXyWHGvkXsMrjExKfL2Zb8f846lS8b/pub?gid=0&single=true&output=csv";
         const PROXY_CORS = "https://herokuapp.com"; 
 
-        // Modificado para mapear: Columna A (Código), B (DNI), C (Nombre), D (Categoría)
         function buscarUsuarioEnCsv(textoCsv, intento) {
             const filas = textoCsv.split(/\r?\n/);
             
@@ -165,15 +177,14 @@
                 const columnas = filas[i].split(",");
                 
                 if (columnas.length > 0) {
-                    // Evaluamos el código de validación (Columna A)
                     const codigoCsv = columnas[0].replace(/"/g, "").trim().toLowerCase();
                     
                     if (codigoCsv === intento) {
                         return {
                             codigo: columnas[0].replace(/"/g, "").trim(),
-                            dni: columnas[1] ? columnas[1].replace(/"/g, "").trim() : "No registrado",      // Columna B
-                            nombre: columnas[2] ? columnas[2].replace(/"/g, "").trim() : "No registrado",   // Columna C
-                            categoria: columnas[3] ? columnas[3].replace(/"/g, "").trim() : "No registrado" // Columna D
+                            dni: columnas[1] ? columnas[1].replace(/"/g, "").trim() : "No registrado",      
+                            nombre: columnas[2] ? columnas[2].replace(/"/g, "").trim() : "No registrado",   
+                            categoria: columnas[3] ? columnas[3].replace(/"/g, "").trim() : "No registrado" 
                         };
                     }
                 }
@@ -182,7 +193,6 @@
         }
 
         function mostrarContenidoPrivado(usuario) {
-            // Pasamos los datos correctos a sus respectivas etiquetas
             document.getElementById("datos-nombre").innerText = usuario.nombre;
             document.getElementById("datos-dni").innerText = usuario.dni;
             document.getElementById("datos-categoria").innerText = usuario.categoria;
