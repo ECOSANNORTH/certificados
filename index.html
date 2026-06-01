@@ -114,7 +114,7 @@
         
         <h2>VALIDACIÓN DE CERTIFICADOS</h2>
         
-        <input type="text" id="codigo-input" placeholder="Ingresa tu código de acceso" autocomplete="off">
+        <input type="text" id="codigo-input" placeholder="Ingresa tu código de validación" autocomplete="off">
         <button onclick="verificarCodigo()">VALIDAR</button>
         <p id="mensaje-estado"></p>
     </div>
@@ -161,7 +161,7 @@
                     document.getElementById("pantalla-login").style.display = "none";
                     document.getElementById("contenido-privado").style.display = "block";
                 } else {
-                    estadoText.innerText = "Código incorrecto o no autorizado.";
+                    estadoText.innerText = "Código incorrecto o no verificado.";
                     estadoText.style.color = "#e74c3c";
                 }
 
