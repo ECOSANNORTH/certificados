@@ -45,13 +45,10 @@
             margin-top: 0;         
             margin-bottom: 25px;       
             display: block;
-
-            /* NUEVO: Hace que aparezca la mano de clic y añade suavidad al efecto hover */
             cursor: pointer;
             transition: opacity 0.2s ease-in-out;
         }
 
-        /* NUEVO: La foto se aclara un poco al pasar el cursor encima */
         .imagen-superior:hover {
             opacity: 0.9;
         }
@@ -100,14 +97,37 @@
             width: 100%;
             text-align: center;
         }
-        #contenido-privado h1 { color: #2ecc71; }
+        #contenido-privado h1 { color: #2ecc71; margin-bottom: 10px; }
+        
+        /* Tarjeta contenedora de los datos del alumno/titular */
+        .tarjeta-datos {
+            background-color: #f4fbf7;
+            border: 1px solid #a3e4d7;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: left;
+            margin-top: 20px;
+        }
+        .tarjeta-datos h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+        .tarjeta-datos p {
+            font-size: 1.1rem;
+            margin: 12px 0;
+            color: #34495e;
+        }
+        .tarjeta-datos span {
+            font-weight: 600;
+            color: #1a252f;
+        }
     </style>
 </head>
 <body>
 
-    <!-- FORMULARIO DE LOGEO -->
     <div id="pantalla-login">
-        
         <a href="https://ihqy5bz.spread.name/" target="_blank" rel="noopener noreferrer" style="display: block; text-decoration: none;">
             <img src="foto.png" alt="Logo Ecosannorth" class="imagen-superior">
         </a>
@@ -119,17 +139,57 @@
         <p id="mensaje-estado"></p>
     </div>
 
-    <!-- CONTENIDO PRIVADO DE LA PÁGINA -->
     <div id="contenido-privado">
         <h1>¡CERTIFICADO VÁLIDO! 🌟</h1>
         <p>Tu certificado ha sido validado exitosamente.</p>
+        
         <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-        <p><em>[Ya puedes diseñar tu página web dentro de este contenedor en VS Code]</em></p>
+        
+        <div class="tarjeta-datos">
+            <h3>👤 Información del Titular</h3>
+            <p><strong>Nombre:</strong> <span id="datos-nombre"></span></p>
+            <p><strong>DNI:</strong> <span id="datos-dni"></span></p>
+            <p><strong>Categoría:</strong> <span id="datos-categoria"></span></p>
+        </div>
     </div>
 
     <script>
         const ENLACE_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTxCusB0O36Zlyhx2JOWRLN5a_9pEOu3PFXG_HOZaqcDk00uzmXyWHGvkXsMrjExKfL2Zb8f846lS8b/pub?gid=0&single=true&output=csv";
         const PROXY_CORS = "https://herokuapp.com"; 
+
+        // Modificado para mapear: Columna A (Código), B (DNI), C (Nombre), D (Categoría)
+        function buscarUsuarioEnCsv(textoCsv, intento) {
+            const filas = textoCsv.split(/\r?\n/);
+            
+            for (let i = 0; i < filas.length; i++) {
+                const columnas = filas[i].split(",");
+                
+                if (columnas.length > 0) {
+                    // Evaluamos el código de validación (Columna A)
+                    const codigoCsv = columnas[0].replace(/"/g, "").trim().toLowerCase();
+                    
+                    if (codigoCsv === intento) {
+                        return {
+                            codigo: columnas[0].replace(/"/g, "").trim(),
+                            dni: columnas[1] ? columnas[1].replace(/"/g, "").trim() : "No registrado",      // Columna B
+                            nombre: columnas[2] ? columnas[2].replace(/"/g, "").trim() : "No registrado",   // Columna C
+                            categoria: columnas[3] ? columnas[3].replace(/"/g, "").trim() : "No registrado" // Columna D
+                        };
+                    }
+                }
+            }
+            return null; 
+        }
+
+        function mostrarContenidoPrivado(usuario) {
+            // Pasamos los datos correctos a sus respectivas etiquetas
+            document.getElementById("datos-nombre").innerText = usuario.nombre;
+            document.getElementById("datos-dni").innerText = usuario.dni;
+            document.getElementById("datos-categoria").innerText = usuario.categoria;
+
+            document.getElementById("pantalla-login").style.display = "none";
+            document.getElementById("contenido-privado").style.display = "block";
+        }
 
         async function verificarCodigo() {
             const inputField = document.getElementById("codigo-input");
@@ -153,13 +213,11 @@
                     respuesta = await fetch(PROXY_CORS + ENLACE_CSV);
                 }
                 const textoCsv = await respuesta.text();
-                const codigosAutorizados = textoCsv.split(/\r?\n/).map(linea => {
-                    return linea.replace(/"/g, "").trim().toLowerCase();
-                });
+                
+                const usuarioEncontrado = buscarUsuarioEnCsv(textoCsv, intento);
 
-                if (codigosAutorizados.includes(intento)) {
-                    document.getElementById("pantalla-login").style.display = "none";
-                    document.getElementById("contenido-privado").style.display = "block";
+                if (usuarioEncontrado) {
+                    mostrarContenidoPrivado(usuarioEncontrado);
                 } else {
                     estadoText.innerText = "Código incorrecto o no verificado.";
                     estadoText.style.color = "#e74c3c";
@@ -169,13 +227,10 @@
                 try {
                     const respuestaAlt = await fetch("https://allorigins.win" + encodeURIComponent(ENLACE_CSV));
                     const jsonAlt = await respuestaAlt.json();
-                    const codigosAutorizados = jsonAlt.contents.split(/\r?\n/).map(linea => {
-                        return linea.replace(/"/g, "").trim().toLowerCase();
-                    });
                     
-                    if (codigosAutorizados.includes(intento)) {
-                        document.getElementById("pantalla-login").style.display = "none";
-                        document.getElementById("contenido-privado").style.display = "block";
+                    const usuarioEncontrado = buscarUsuarioEnCsv(jsonAlt.contents, intento);
+                    if (usuarioEncontrado) {
+                        mostrarContenidoPrivado(usuarioEncontrado);
                         return;
                     }
                 } catch(e) {}
