@@ -161,10 +161,8 @@
             <p><strong>Nombre/Razón Social:</strong> <span id="datos-nombre"></span></p>
             <p><strong>DNI/RUC:</strong> <span id="datos-dni"></span></p>
             <p><strong>Categoría:</strong> <span id="datos-categoria"></span></p>
-            <p><strong>Fecha de Emisión:</strong> <span id="datos-Fecha de Emisión"></span></p>
-            <p><strong>Fecha Maxima de Validez:</strong> <span id="datos-Fecha Max de Validez"></span></p>
-
-
+            <p><strong>Fecha de Emisión:</strong> <span id="datos-Fecha-Emision"></span></p>
+            <p><strong>Fecha Máxima de Validez:</strong> <span id="datos-Fecha-Validez"></span></p>
         </div>
 
         <img src="foto.png" alt="Logo Ecosannorth Inferior" class="imagen-inferior">
@@ -172,7 +170,7 @@
 
     <script>
         const ENLACE_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTxCusB0O36Zlyhx2JOWRLN5a_9pEOu3PFXG_HOZaqcDk00uzmXyWHGvkXsMrjExKfL2Zb8f846lS8b/pub?gid=0&single=true&output=csv";
-        const PROXY_CORS = "https://herokuapp.com"; 
+        const PROXY_CORS = "https://cors-anywhere.herokuapp.com/"; // Proxy corregido (opcional)
 
         function buscarUsuarioEnCsv(textoCsv, intento) {
             const filas = textoCsv.split(/\r?\n/);
@@ -188,10 +186,9 @@
                             codigo: columnas[0].replace(/"/g, "").trim(),
                             dni: columnas[1] ? columnas[1].replace(/"/g, "").trim() : "No registrado",      
                             nombre: columnas[2] ? columnas[2].replace(/"/g, "").trim() : "No registrado",   
-                            categoria: columnas[3] ? columnas[3].replace(/"/g, "").trim() : "No registrado" 
-                            fecha de emisión: columnas[4] ? columnas[4].replace(/"/g, "").trim() : "No registrado"
-                            fecha max de Validez: columnas[5] ? columnas[5].replace(/"/g, "").trim() : "No registrado" 
-                        
+                            categoria: columnas[3] ? columnas[3].replace(/"/g, "").trim() : "No registrado", 
+                            fechaEmision: columnas[4] ? columnas[4].replace(/"/g, "").trim() : "No registrado",
+                            fechaValidez: columnas[5] ? columnas[5].replace(/"/g, "").trim() : "No registrado"
                         };
                     }
                 }
@@ -203,6 +200,8 @@
             document.getElementById("datos-nombre").innerText = usuario.nombre;
             document.getElementById("datos-dni").innerText = usuario.dni;
             document.getElementById("datos-categoria").innerText = usuario.categoria;
+            document.getElementById("datos-Fecha-Emision").innerText = usuario.fechaEmision;
+            document.getElementById("datos-Fecha-Validez").innerText = usuario.fechaValidez;
 
             document.getElementById("pantalla-login").style.display = "none";
             document.getElementById("contenido-privado").style.display = "block";
@@ -242,7 +241,7 @@
 
             } catch (error) {
                 try {
-                    const respuestaAlt = await fetch("https://allorigins.win" + encodeURIComponent(ENLACE_CSV));
+                    const respuestaAlt = await fetch("https://allorigins.win/get?url=" + encodeURIComponent(ENLACE_CSV));
                     const jsonAlt = await respuestaAlt.json();
                     
                     const usuarioEncontrado = buscarUsuarioEnCsv(jsonAlt.contents, intento);
