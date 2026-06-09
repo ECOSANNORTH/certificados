@@ -7,9 +7,14 @@
     <style>
         * { box-sizing: border-box; }
         
+        /* FONDO DINÁMICO OPTIMIZADO */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #10b981;
+            /* Definimos los colores corporativos y de acento en el gradiente */
+            background: linear-gradient(-45deg, #10b981, #059669, #3498db, #0f766e);
+            background-size: 400% 400%;
+            /* Animación fluida de 15 segundos en bucle */
+            animation: fondoDinamico 12s ease infinite;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -17,12 +22,19 @@
             align-items: center;
             min-height: 100vh;
         }
+
+        /* Movimiento de las coordenadas del gradiente */
+        @keyframes fondoDinamico {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
         
         #pantalla-login {
             background: white;
             padding: 0 30px 40px 30px;
             border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.15); /* Sombra un poco más profunda para resaltar sobre el fondo */
             max-width: 400px;
             width: 100%;
             text-align: center;
@@ -91,7 +103,7 @@
             background: white;
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.15);
             max-width: 600px;
             width: 100%;
             text-align: center;
@@ -167,7 +179,7 @@
 
     <script>
         const ENLACE_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTxCusB0O36Zlyhx2JOWRLN5a_9pEOu3PFXG_HOZaqcDk00uzmXyWHGvkXsMrjExKfL2Zb8f846lS8b/pub?gid=0&single=true&output=csv";
-        const PROXY_CORS = "https://cors-anywhere.herokuapp.com/"; // Proxy corregido (opcional)
+        const PROXY_CORS = "https://cors-anywhere.herokuapp.com/"; 
 
         function buscarUsuarioEnCsv(textoCsv, intento) {
             const filas = textoCsv.split(/\r?\n/);
